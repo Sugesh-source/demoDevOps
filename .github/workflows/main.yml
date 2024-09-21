@@ -1,0 +1,40 @@
+name: Maven Build Pipeline
+
+# This workflow will run when code is pushed to the 'master' branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code from the GitHub repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up JDK 1.8 (Java 8)
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '1.8'
+
+      # Step 3: Build the project with Maven, and run tests
+      - name: Build with Maven
+        run: mvn -Xmx3072m package
+
+      # Step 4: Upload the JUnit test results for analysis
+      - name: Upload JUnit test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: junit-results
+          path: '**/surefire-reports/TEST-*.xml'
+
+      # Step 5: Upload WAR files as build artifacts
+      - name: Upload WAR file
+        uses: actions/upload-artifact@v2
+        with:
+          name: packaged-war
+          path: '**/*.war'
