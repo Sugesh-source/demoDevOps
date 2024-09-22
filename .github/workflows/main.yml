@@ -41,7 +41,9 @@ jobs:
 
       # Step 4: Build the project with Maven and run tests
       - name: Build with Maven
-        run: mvn -Xmx3072m package
+        env:
+          MAVEN_OPTS: -Xmx3072m  # Set JVM max heap size to 3072MB
+        run: mvn package
 
       # Step 5: Upload the JUnit test results for analysis
       - name: Upload JUnit test results
